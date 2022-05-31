@@ -1,0 +1,143 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Solid Api Docs",
+    "description": "This is an API solid",
+    "version": "1.0.0",
+    "contact": {
+      "email": "guibarrosodeoliveira5@gmail.com"
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a User",
+        "description": "Create a new User",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": "string",
+                  "email": "string",
+                  "password": "string"
+                }
+              },
+              "example": {
+                "username": "test",
+                "email": "test@gmail.com",
+                "password": "supersecret"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created"
+          },
+          "400": {
+            "description": "Username or Password is Empty!"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Find a User By Id",
+        "description": "return a single user",
+        "operationId": "id",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Id of users return",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "id": "teste",
+              "username": "teste"
+            }
+          }
+        }
+      }
+    },
+    "/users/authenticate": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Authenticate a user",
+        "description": "Authenticate a single user",
+        "produces": ["application/json"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": "string",
+                  "password": "string"
+                }
+              },
+              "example": {
+                "email": "test@gmail.com",
+                "password": "supersecret"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "token": "string",
+              "user": "object"
+            }
+          },
+          "401": {
+            "description": "unauthorized"
+          }
+        }
+      }
+    },
+    "/users/import": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Import users from a csv file",
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": [{
+                    "type": "string",
+                    "description": "Csv file to upload",
+                    "format": "binary"
+                  }]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "400": {
+            "description": "error"
+          }
+        }
+      }
+    }
+  }
+}
