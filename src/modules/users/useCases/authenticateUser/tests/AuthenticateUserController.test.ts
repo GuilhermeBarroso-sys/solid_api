@@ -51,7 +51,7 @@ describe("Testing Create User Controller", () => {
 		const {res : response} = getMockRes();
 		const createUserController = new AuthenticateUserController(authenticateUserUseCase);
 		await createUserController.handle(request, response);
-		expect(response.status).toHaveBeenCalledWith(400);
+		expect(response.status).toHaveBeenCalledWith(401);
 	});
 
 	it("should return a throw error with status Code 400 and invalid email", async () => {
@@ -73,7 +73,7 @@ describe("Testing Create User Controller", () => {
 		const {res : response} = getMockRes();
 		const createUserController = new AuthenticateUserController(authenticateUserUseCase);
 		await createUserController.handle(request, response);
-		expect(response.status).toHaveBeenCalledWith(400);
+		expect(response.status).toHaveBeenCalledWith(401);
 	});
 
 	it("should return a throw error with status Code 400 and missing required params", async () => {
@@ -95,6 +95,6 @@ describe("Testing Create User Controller", () => {
 		const {res : response} = getMockRes();
 		const createUserController = new AuthenticateUserController(authenticateUserUseCase);
 		await createUserController.handle(request, response);
-		expect(response.status).toHaveBeenCalledWith(400);
+		expect(response.status).toHaveBeenCalledWith(401);
 	});
 });

@@ -34,11 +34,16 @@ class UserRepositoryPrisma implements IUserRepository {
 	async findAll(): Promise<IUserFind[]> {
 		return await prisma.user.findMany();
 	}
-	destroy(): Promise<void> {
+	async destroy(): Promise<void> {
 		throw new Error("Method not implemented.");
 	}
-	update(id: string, data: IUserEdit): Promise<void> {
-		throw new Error("Method not implemented.");
+	async update(id: string, data: IUserEdit): Promise<void> {
+		await prisma.user.update({
+			data,
+			where: {
+				id
+			}
+		});
 	}
 
 }

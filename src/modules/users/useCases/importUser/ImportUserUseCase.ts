@@ -6,6 +6,7 @@ import { unlink } from "fs/promises";
 interface IUser {
   
 	username: string;
+	email: string
 	password: string;
 }
 
@@ -25,9 +26,9 @@ class ImportUserUseCase {
 			parseFile
 				.on("data", async (data) => {	
 
-					const [username, password] = data;
+					const [username,email, password] = data;
           
-					users.push({username, password});
+					users.push({username,email, password});
 				})
 				.on("end", async () => {
 					await unlink(path);
