@@ -13,9 +13,9 @@ export interface IUserFind {
 }
 
 export interface IUserEdit {
-	username: string;
-	email: string;
-	password: string;
+	username?: string;
+	email?: string;
+	password?: string;
 }
 export interface IUserRepository {
 	create(data : IUser) : Promise<void>

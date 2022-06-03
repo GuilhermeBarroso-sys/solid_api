@@ -1,0 +1,45 @@
+<%- include('../../../layouts/header.ejs') %>
+<style>
+  .container {
+  max-width:1024px;
+  margin:0 auto;
+  background-color: #323232;
+  height: auto;
+  text-align: center;
+  font-family: 'Roboto', sans-serif
+}
+
+.container h1,h2,h3,h4,h5 {
+  color: #F5F5F5;
+}
+
+.container span,p {
+  color: #F7F7F7
+}
+
+.container .button {
+  background-color:#F5F5F5;
+  padding:10px;
+  width:150px;
+  margin:0 auto;
+  cursor: pointer;
+  border-radius: 3.5px;
+}
+.container .button:hover {
+  background-color:#fcfcfc;
+
+}
+.container .button a {
+  color:#323232;
+  text-decoration: none;
+}
+</style>
+  <div class = "container">
+    <h1 class = "text-center">Olá! Enviamos esse E-mail para você redefinir sua senha</h1>
+    <p class = "text-center"> <small>Nao reconhece esse email? Desconsidere-o.</small></p>
+    <h4 class = "text-center"> Clique no botao abaixo para alterar sua senha</h4>
+    <div class = "text-center button"><a href = "<%= signedUrlToRecoveryPassword %>">Alterar senha</a></div>
+    <br>
+
+  </div>
+<%- include('../../../layouts/footer.ejs') %>
