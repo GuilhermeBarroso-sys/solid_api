@@ -16,6 +16,7 @@ class SendEmailToRecoveryPasswordUseCase {
 		const signedUrlToRecoveryPassword = `${process.env.FRONT_URL}/${user.id}/${passwordToken}`;
 		const body = await ejs.renderFile(viewPath, {signedUrlToRecoveryPassword});
 		await this.mailAdapter.send({
+			recipient: email,
 			subject: "Recovery Password",
 			body
 		});

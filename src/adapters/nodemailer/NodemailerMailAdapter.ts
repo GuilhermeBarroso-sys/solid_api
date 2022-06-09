@@ -9,10 +9,10 @@ const  TRANSPORT = nodemailer.createTransport({
 	}
 });
 export class NodemailerMailAdapter implements MailAdapter {
-	async send({subject,body}: SendMailData) {
+	async send({recipient, subject,body}: SendMailData) {
 		await TRANSPORT.sendMail({
 			from:"Dolphin Team <dolph@in.com>",
-			to: "Guilherme Barroso <guibarrosodeoliveira5@gmail.com>",
+			to: recipient,
 			subject,
 			html: body
 		});
