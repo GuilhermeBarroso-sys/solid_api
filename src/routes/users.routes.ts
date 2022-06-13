@@ -11,12 +11,14 @@ import { FindUserByEmailFactory } from "../modules/users/useCases/findUserByEmai
 import { SendEmailToRecoveryPasswordFactory } from "../modules/users/useCases/sendEmailRecoveryPassword";
 import { RecoveryPasswordFactory } from "../modules/users/useCases/recoveryPassword";
 import { recoveryPasswordValidation } from "../middlewares/recoveryPasswordValidation";
+import { UpdateUserFactory } from "../modules/users/useCases/updateUser";
+import { DestroyUserFactory } from "../modules/users/useCases/destroyUser";
 const usersRoutes = Router();
 const upload = multer({
 	dest: "./tmp"
 });
 
-usersRoutes.get("/:email", ensureAuthenticate, (request, response) => {
+usersRoutes.get("/email/:email", ensureAuthenticate, (request, response) => {
 	return FindUserByEmailFactory().handle(request,response);
 });
 
@@ -32,16 +34,25 @@ usersRoutes.post("/", (request,response) => {
 	return createUserFactory().handle(request, response);
 });
 
-usersRoutes.post("/import", upload.single("file"), async (request,response) => {
+usersRoutes.post("/import", ensureAuthenticate , upload.single("file"), async (request,response) => {
 	return ImportUserFactory().handle(request, response);
 });
 
-usersRoutes.post("/sendEmailToRecoveryPassword", async (request, response) => {
+usersRoutes.post("/sendEmailToRecoveryPassword", ensureAuthenticate ,async (request, response) => {
 	return SendEmailToRecoveryPasswordFactory().handle(request, response);
 });
 
-usersRoutes.patch("/recoveryPassword", recoveryPasswordValidation ,async (request, response) => {
+usersRoutes.patch("/recoveryPassword", ensureAuthenticate , recoveryPasswordValidation ,async (request, response) => {
 	return RecoveryPasswordFactory().handle(request, response);
 });
+
+usersRoutes.put("/:id", ensureAuthenticate ,async (request, response) => {
+	return UpdateUserFactory().handle(request,response);
+});
+
+usersRoutes.delete("/:id", ensureAuthenticate ,async (request, response) => {
+	return DestroyUserFactory().handle(request,response);
+});
+
 
 export {usersRoutes};

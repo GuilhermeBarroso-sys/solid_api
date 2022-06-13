@@ -13,18 +13,25 @@ describe("Testing Send Email To Recovery Password Controller", () => {
 			}
 		});
 		const {res : response} = getMockRes();
-		const execute : Promise<{
-			user_id: string;
-			passwordToken: string;
-		}> = async (email: string) => {
+		const execute  = async (email: string) => {
 			return  {
 				user_id:uuid(), 
 				passwordToken: "12312312"
 			};
 		};
-		const sendEmailToRecoveryPasswordUseCaseMock  = {
-			execute: async (email : string) => {return null;}
-		};
+
+		const sendEmailToRecoveryPasswordUseCaseMock = new SendEmailToRecoveryPasswordUseCase({
+			create: async () => {},
+			findAll: async () => {return {...[]}; },
+			createMany: async () => {throw new Error("error");},
+			destroy: async () => {},
+			update: async () => {},
+			findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: "1234122"};},
+			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: "1234122"};}
+		}, {
+			send: async () => {}
+		});
+		sendEmailToRecoveryPasswordUseCaseMock.execute = execute;
     
 		const sendEmailToRecoveryPasswordControllerMock = new SendEmailToRecoveryPasswordController(sendEmailToRecoveryPasswordUseCaseMock);
 		await sendEmailToRecoveryPasswordControllerMock.handle(request, response);
@@ -40,9 +47,22 @@ describe("Testing Send Email To Recovery Password Controller", () => {
 			}
 		});
 		const {res : response} = getMockRes();
-		const sendEmailToRecoveryPasswordUseCaseMock = {
-			execute: async () => {throw new Error("");}
+		const execute  = async (email: string) => {
+			throw new Error("");
 		};
+		const sendEmailToRecoveryPasswordUseCaseMock = new SendEmailToRecoveryPasswordUseCase({
+			create: async () => {},
+			findAll: async () => {return {...[]}; },
+			createMany: async () => {throw new Error("error");},
+			destroy: async () => {},
+			update: async () => {},
+			findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: "1234122"};},
+			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: "1234122"};}
+		}, {
+			send: async () => {}
+		});
+		sendEmailToRecoveryPasswordUseCaseMock.execute = execute;
+
 		const sendEmailToRecoveryPasswordControllerMock = new SendEmailToRecoveryPasswordController(sendEmailToRecoveryPasswordUseCaseMock);
 		await sendEmailToRecoveryPasswordControllerMock.handle(request, response);
 		expect(request).toHaveProperty("recoveryPassword");

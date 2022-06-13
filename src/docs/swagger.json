@@ -1,14 +1,74 @@
 {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
-    "title": "Solid Api Docs",
+    "title": "Solid Api Docs (Discontinued)",
     "description": "This is an API solid",
     "version": "1.0.0",
     "contact": {
       "email": "guibarrosodeoliveira5@gmail.com"
     }
   },
+  "securityDefinitions": {
+     "bearerAuth": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey",
+      "description": "JWT Authorization header"
+    }
+  },
   "paths": {
+    "/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Find a User By Id",
+        "description": "return a single user",
+        "operationId": "id",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "description": "Id of users return",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "id": "teste",
+              "username": "teste",
+              "email": "test@gmail.com"
+            }
+          }
+        }
+      }
+    },
+    "/users/email/{email}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Find a User By Email",
+        "description": "return a single user",
+        "operationId": "email",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "email",
+          "in": "path",
+          "description": "email of users return",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "id": "teste",
+              "username": "teste",
+              "email": "test@gmail.com"
+            }
+          }
+        }
+      }
+    },
     "/users": {
       "post": {
         "tags": ["Users"],
@@ -39,31 +99,6 @@
           },
           "400": {
             "description": "Username or Password is Empty!"
-          }
-        }
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "tags": ["Users"],
-        "summary": "Find a User By Id",
-        "description": "return a single user",
-        "operationId": "id",
-        "produces": ["application/json"],
-        "parameters": [{
-          "name": "id",
-          "in": "path",
-          "description": "Id of users return",
-          "required": true,
-          "type": "string"
-        }],
-        "responses": {
-          "200": {
-            "description": "success",
-            "schema": {
-              "id": "teste",
-              "username": "teste"
-            }
           }
         }
       }
@@ -140,4 +175,5 @@
       }
     }
   }
+ 
 }
