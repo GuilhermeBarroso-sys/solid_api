@@ -8,9 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(
 	rateLimit({
-		windowMs: 1 * 60 * 1000,
-		max: 100,
-		message: "You exceeded the max of requests allowed, please contact the support team.",
+		windowMs: 1000 * 60 * 10,
+		max: 1000,
+		message: "You exceeded the max of requests allowed",
 		statusCode: 429,
 		headers: true,
 	})
