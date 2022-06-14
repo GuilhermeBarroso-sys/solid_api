@@ -27,7 +27,7 @@ describe("Testing Find User Controller", () => {
 		expect(response.json).toBeCalledWith({id: "",username: "", email: "",});
 	});
 
-	it("Should be throw a error and return status code 500", async () => {
+	it("Should throw a error and return status code 500", async () => {
 		const request = getMockReq({
 			params: {
 				id: v4().toString()

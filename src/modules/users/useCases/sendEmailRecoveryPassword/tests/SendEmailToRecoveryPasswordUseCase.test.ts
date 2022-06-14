@@ -2,7 +2,7 @@
 import { SendEmailToRecoveryPasswordUseCase } from "../SendEmailToRecoveryPasswordUseCase";
 
 describe("Testing Send Email To Recovery Password Use Case" , () => {
-	it("Should be throw an Error because email doesn't exist", async () => {
+	it("Should throw an Error because email doesn't exist", async () => {
 		const sendEmailToRecoveryPasswordUseCase = new SendEmailToRecoveryPasswordUseCase({
 			create: async () => {},
 			findAll: async () => {return {...[]}; },

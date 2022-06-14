@@ -3,7 +3,7 @@ import {IUser} from "../../../repositories/IUserRepository";
 import { AuthenticateUserUseCase } from "../AuthenticateUserUseCase";
 import {hash, hashSync} from "bcryptjs";
 describe("Testing User Create", () => {
-	it("should be throw a missing params error", async () => {
+	it("Should throw a missing params error", async () => {
 		const userMock : IUser = {
 			username: undefined,
 			email: undefined,

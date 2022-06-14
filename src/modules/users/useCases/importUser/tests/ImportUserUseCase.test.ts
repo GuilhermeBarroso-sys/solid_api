@@ -35,7 +35,7 @@ describe("Testing Import User Use Case", () => {
 		findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};},
 		findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
 	}); 
-	it("Should be throw a file type Error", async () => {
+	it("Should throw a file type Error", async () => {
 		const fileMockFileType : Express.Multer.File = {
 			fieldname: "file",
 			originalname: "mockUserImport.csv",

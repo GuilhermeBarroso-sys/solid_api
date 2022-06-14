@@ -1,7 +1,7 @@
 import { RecoveryPasswordUseCase } from "../RecoveryPasswordUseCase";
 
 describe("Testing Recovery Password Use Case", () => {
-	it("Should be Throw a User Error (Not Found)", async () => {
+	it("Should throw a User Error (Not Found)", async () => {
 		const recoveryPasswordUseCase = new RecoveryPasswordUseCase({
 			create: async () => {return null;},
 			createMany: async () => {return null;},
@@ -19,7 +19,7 @@ describe("Testing Recovery Password Use Case", () => {
 		await expect(recoveryPasswordUseCase.execute(data)).rejects.toThrowError("User not found!");
 	});
 
-	it("Should be Throw a Token Error Because his already been used", async () => {
+	it("Should throw a Token Error Because his already been used", async () => {
 		const recoveryPasswordUseCase = new RecoveryPasswordUseCase({
 			create: async () => {return null;},
 			createMany: async () => {return null;},
