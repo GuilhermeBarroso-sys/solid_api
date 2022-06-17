@@ -1,25 +1,25 @@
 version: '3.7'
 
 services:
-  mysql:
-    image: mysql:8
-    ports:
-      - 3306:3306
-    volumes:
-      - ~/apps/mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=S3cret
-      - MYSQL_PASSWORD=S3cret
-      - MYSQL_USER=docker_user
-      - MYSQL_DATABASE=solid_api
-  app_dev:  
-    build:
-      context: .
-      dockerfile: Dockerfile-dev
-    container_name: solidapi_dev
-    ports:
-      - 3001:3001
-    network_mode: host
+  # mysql:
+  #   image: mysql:8
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - ~/apps/mysql:/var/lib/mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=S3cret
+  #     - MYSQL_PASSWORD=S3cret
+  #     - MYSQL_USER=docker_user
+  #     - MYSQL_DATABASE=solid_api
+  # app_dev:  
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-dev
+  #   container_name: solidapi_dev
+  #   ports:
+  #     - 3001:3001
+  #   network_mode: host
 
   app_production:  
     build:
