@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --transpile-only --exit-child --ignore-watch node_modules src/index.ts",
     "build": "tsc",
-    "start": "node build/src/index.js",
+    "start": "export NODE_ENV=production && node build/src/index.js",
     "test": "jest"
   },
   "keywords": [],

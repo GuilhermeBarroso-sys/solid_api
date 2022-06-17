@@ -1,0 +1,20 @@
+# Especificando qual eh a imagem que vai rodar
+FROM node:16-alpine
+
+# Diretorio onde vai ser criada a imagem
+WORKDIR /usr/dev 
+
+# Copiando nosso package.json para o docker 
+COPY package.json ./
+
+# Executa um comando
+RUN npm install
+
+COPY . .
+EXPOSE 3000
+RUN npx prisma generate
+# Roda comando sendo os espacos separados por array
+CMD ["npm", "run", "dev"]
+
+# Agora pra criar imagem basta digitar
+# docker build -t nomedoprojeto .

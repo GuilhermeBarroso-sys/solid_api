@@ -14,7 +14,7 @@ export class NodemailerMailAdapter implements MailAdapter {
 			from:"Dolphin Team <dolph@in.com>",
 			to: recipient,
 			subject,
-			html: body
+			html: body,
 		});
 	}
 
