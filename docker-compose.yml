@@ -1,57 +1,31 @@
-version: '3'
+version: '3.7'
+
 services:
-  nodejs:
+  mysql:
+    image: mysql:8
+    ports:
+      - 3306:3306
+    volumes:
+      - ~/apps/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=S3cret
+      - MYSQL_PASSWORD=S3cret
+      - MYSQL_USER=docker_user
+      - MYSQL_DATABASE=solid_api
+  app_dev:  
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    container_name: solidapi_dev
+    ports:
+      - 3001:3001
+    network_mode: host
+
+  app_production:  
     build:
       context: .
       dockerfile: Dockerfile-prod
-    image: nodejs
-    container_name: nodejs
-    restart: unless-stopped
-    networks:
-      - app-network
-  webserver:
-    image: nginx:mainline-alpine
-    container_name: webserver
+    container_name: solidapi_prod
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - web-root:/var/www/html
-      - ./nginx-conf:/etc/nginx/conf.d
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
-    depends_on:
-      - nodejs
-    networks:
-      - app-network
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/html
-    depends_on:
-      - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --staging -d devgui.info  -d www.devgui.info
-    #command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --force-renewal -d devgui.info  -d www.devgui.info
-volumes:
-  certbot-etc:
-  certbot-var:
-  web-root:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ubuntu/solid_api/views/
-      o: bind
-  dhparam:
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/ubuntu/solid_api/dhparam/
-      o: bind
-networks:
-  app-network:
-    driver: bridge
+      - 3000:3000
