@@ -57,8 +57,8 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --staging -d devgui.info  -d www.devgui.info
-    #command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --force-renewal -d devgui.info  -d www.devgui.info
+    command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --staging -d api.devgui.info  -d www.api.devgui.info
+    #command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --force-renewal -d api.devgui.info  -d www.api.devgui.info
 volumes:
   certbot-etc:
   certbot-var:
