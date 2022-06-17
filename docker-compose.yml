@@ -1,11 +1,11 @@
 version: '3'
 services:
-  Nodejs:
+  nodejs:
     build:
       context: .
       dockerfile: Dockerfile-prod
-    image: Nodejs
-    container_name: Nodejs
+    image: nodejs
+    container_name: nodejs
     restart: unless-stopped
     networks:
       - app-network
@@ -23,7 +23,7 @@ services:
       - certbot-var:/var/lib/letsencrypt
       - dhparam:/etc/ssl/certs
     depends_on:
-      - Nodejs
+      - nodejs
     networks:
       - app-network
   certbot:
@@ -35,8 +35,8 @@ services:
       - web-root:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email my@email.com --agree-tos --no-eff-email --staging -d Nodejs.devopslee.com  -d www.Nodejs.devopslee.com
-    #command: certonly --webroot --webroot-path=/var/www/html --email my@email.com --agree-tos --no-eff-email --force-renewal -d Nodejs.devopslee.com  -d www.Nodejs.devopslee.com
+    command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --staging -d devgui.info  -d www.devgui.info
+    #command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --force-renewal -d devgui.info  -d www.devgui.info
 volumes:
   certbot-etc:
   certbot-var:
