@@ -1,26 +1,18 @@
-# Base image
 FROM node:16-alpine as ts-compiler
-# Setting working directory
-WORKDIR /app
-#Set Path /app/node_modules/.bin
-ENV PATH /app/node_modules/.bin:$PATH
-#Coppy package.json and typescript settings in the image
-COPY package.json ./
-COPY tsconfig.json ./ 
-#Install Packages
+WORKDIR /usr/app
+COPY package*.json ./
+COPY tsconfig*.json ./
 RUN npm install
-# Copy the app
 COPY . ./
+RUN npm run build
 
 FROM node:16-alpine as ts-remover
+WORKDIR /usr/app
+COPY --from=ts-compiler /usr/app/package*.json ./
+COPY --from=ts-compiler /usr/app/prisma ./
+COPY --from=ts-compiler /usr/app/.env ./
+COPY --from=ts-compiler /usr/app/build ./build
 
-WORKDIR /app
-
-COPY --from=ts-compiler /app/package.json ./
-COPY --from=ts-compiler /app/dist ./
 RUN npm install --only=production
-# Expose app port
 EXPOSE 3000
-
-# Starting App
-CMD ["node", "dist/src/index.js"]
+CMD  ["npm", "run", "start"]
