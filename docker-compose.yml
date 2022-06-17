@@ -12,15 +12,6 @@ services:
       - MYSQL_PASSWORD=S3cret
       - MYSQL_USER=docker_user
       - MYSQL_DATABASE=solid_api
-
-  app_production:  
-    build:
-      context: .
-      dockerfile: Dockerfile-prod
-    container_name: solidapi_prod
-    ports:
-      - 3000:3000
-    network_mode: host
   app_dev:  
     build:
       context: .
@@ -30,7 +21,63 @@ services:
       - 3001:3001
     network_mode: host
 
-  
+  app_production:  
+    build:
+      context: .
+      dockerfile: Dockerfile-prod
+    container_name: solidapi_prod
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    networks:
+      - app-network
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - web-root:/var/www/html
+      - ./nginx-conf:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - dhparam:/etc/ssl/certs
+    depends_on:
+      - app_production
+    networks:
+      - app-network
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html
+    depends_on:
+      - webserver
+    command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --staging -d devgui.info  -d www.devgui.info
+    #command: certonly --webroot --webroot-path=/var/www/html --email guibarrosodeoliveira5@gmail.com --agree-tos --no-eff-email --force-renewal -d devgui.info  -d www.devgui.info
 volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/solid_api/views/
+      o: bind
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/solid_api/dhparam/
+      o: bind
   db:
     driver: local
+networks:
+  app-network:
+    driver: bridge
+
+ 
