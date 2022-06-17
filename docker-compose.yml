@@ -21,11 +21,12 @@ services:
   #     - 3001:3001
   #   network_mode: host
 
-  app_production:  
+  Nodejs:  
     build:
       context: .
       dockerfile: Dockerfile-prod
-    container_name: solidapi_prod
+    image: Nodejs
+    container_name: Nodejs
     restart: unless-stopped
     ports:
       - 3000:3000
@@ -74,8 +75,6 @@ volumes:
       type: none
       device: /home/ubuntu/solid_api/dhparam/
       o: bind
-  db:
-    driver: local
 networks:
   app-network:
     driver: bridge
