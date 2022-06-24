@@ -17,6 +17,8 @@ services:
       context: .
       dockerfile: Dockerfile-dev
     container_name: solidapi_dev
+    volumes:
+      - .:/usr/dev #WORKDIR
     ports:
       - 3001:3001
     network_mode: host

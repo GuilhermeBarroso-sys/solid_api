@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --transpile-only --exit-child --ignore-watch node_modules src/index.ts",
     "build": "tsc",
+    "startDocker:prod": "bash scripts/docker/startProdDocker.sh",
+    "startDocker:dev": "bash scripts/docker/startDevDocker.sh",
     "start": "export NODE_ENV=production && node build/src/index.js",
     "test": "jest"
   },

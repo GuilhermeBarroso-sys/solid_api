@@ -13,6 +13,7 @@ import { RecoveryPasswordFactory } from "../modules/users/useCases/recoveryPassw
 import { recoveryPasswordValidation } from "../middlewares/recoveryPasswordValidation";
 import { UpdateUserFactory } from "../modules/users/useCases/updateUser";
 import { DestroyUserFactory } from "../modules/users/useCases/destroyUser";
+import { GetAuthenticateUserFactory } from "../modules/users/useCases/getAuthenticateUser";
 const usersRoutes = Router();
 const upload = multer({
 	dest: "./tmp"
@@ -21,12 +22,14 @@ const upload = multer({
 usersRoutes.get("/email/:email", ensureAuthenticate, (request, response) => {
 	return FindUserByEmailFactory().handle(request,response);
 });
-
+usersRoutes.get("/authenticate", ensureAuthenticate , (request, response) => {
+	return GetAuthenticateUserFactory().handle(request, response);
+});
 usersRoutes.get("/:id", ensureAuthenticate , (request, response) => {
 	return FindUserFactory().handle(request, response);
 });
-
 usersRoutes.post("/authenticate", (request,response) => {
+
 	return AuthenticateUserFactory().handle(request, response);
 });
 
