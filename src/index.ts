@@ -7,7 +7,8 @@ import swaggerDoc from "./docs/swagger.json";
 import cors from "cors";
 const app = express();
 app.use(cors({
-	origin: process.env.production ? "https://api.devgui.info" : "*"
+	// origin: process.env.production ? "production_react_link" : "*"
+	origin: "*"
 }));
 app.use(express.json());
 app.use(
