@@ -4,7 +4,11 @@ import rateLimit from "express-rate-limit";
 import swagger from "swagger-ui-express";
 import { routes } from "./routes";
 import swaggerDoc from "./docs/swagger.json"; 
+import cors from "cors";
 const app = express();
+app.use(cors({
+	origin: process.env.production ? "https://api.devgui.info" : "*"
+}));
 app.use(express.json());
 app.use(
 	rateLimit({
@@ -18,8 +22,8 @@ app.use(
 app.use(routes);
 app.use("/docs", swagger.serve, swagger.setup(swaggerDoc));
 const port = process.env.PORT;
-app.listen(port, () => {
+app.listen(port, process.env.NODE_ENV == "development" && (() => {
 	console.log("Server running at port", port);
-});
+}));
 
 
