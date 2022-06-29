@@ -17,12 +17,17 @@ export interface IUserEdit {
 	email?: string;
 	password?: string;
 }
+
+export interface IFindAllParams {
+	limit?: string
+	offset?: string
+}
 export interface IUserRepository {
 	create(data : IUser) : Promise<void>
 	createMany(data : IUser[]) : Promise<void>
 	findUser(id : string) : Promise<IUserFind>
 	findByEmail(email : string) : Promise<IUserFind>
-	findAll() : Promise<IUserFind[]>
+	findAll({limit,offset} : IFindAllParams) : Promise<IUserFind[]>
 	destroy(id : string) : Promise<void>
 	update(id : string, data : IUserEdit) : Promise<void>
 }

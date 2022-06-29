@@ -14,6 +14,7 @@ import { recoveryPasswordValidation } from "../middlewares/recoveryPasswordValid
 import { UpdateUserFactory } from "../modules/users/useCases/updateUser";
 import { DestroyUserFactory } from "../modules/users/useCases/destroyUser";
 import { GetAuthenticateUserFactory } from "../modules/users/useCases/getAuthenticateUser";
+import { FindAllUsersFactory } from "../modules/users/useCases/findAllUsers";
 const usersRoutes = Router();
 const upload = multer({
 	dest: "./tmp"
@@ -21,6 +22,9 @@ const upload = multer({
 
 usersRoutes.get("/email/:email", ensureAuthenticate, (request, response) => {
 	return FindUserByEmailFactory().handle(request,response);
+});
+usersRoutes.get("/", ensureAuthenticate, (request, response) => {
+	return FindAllUsersFactory().handle(request, response);
 });
 usersRoutes.get("/authenticate", ensureAuthenticate , (request, response) => {
 	return GetAuthenticateUserFactory().handle(request, response);

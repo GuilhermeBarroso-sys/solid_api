@@ -1,6 +1,6 @@
 
 import { prisma } from "../../../../prisma";
-import {IUser, IUserEdit, IUserFind, IUserRepository} from "../IUserRepository";
+import {IFindAllParams, IUser, IUserEdit, IUserFind, IUserRepository} from "../IUserRepository";
 
 class UserRepositoryPrisma implements IUserRepository {
 	async findByEmail(email: string): Promise<IUserFind> {
@@ -31,8 +31,11 @@ class UserRepositoryPrisma implements IUserRepository {
 			}
 		});
 	}
-	async findAll(): Promise<IUserFind[]> {
-		return await prisma.user.findMany();
+	async findAll({limit,offset} : IFindAllParams): Promise<IUserFind[]> {
+		return await prisma.user.findMany({
+			take: limit ? parseInt(limit) : undefined,
+			skip: offset ? parseInt(limit) : undefined
+		});
 	}
 	async destroy(id : string): Promise<void> {
 		await prisma.user.delete({
