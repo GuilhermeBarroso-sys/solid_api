@@ -19,8 +19,8 @@ export interface IUserEdit {
 }
 
 export interface IFindAllParams {
-	limit?: string
-	offset?: string
+	limit?: number
+	offset?: number
 }
 export interface IUserRepository {
 	create(data : IUser) : Promise<void>

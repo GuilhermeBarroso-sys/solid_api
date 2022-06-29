@@ -32,9 +32,10 @@ class UserRepositoryPrisma implements IUserRepository {
 		});
 	}
 	async findAll({limit,offset} : IFindAllParams): Promise<IUserFind[]> {
+		console.log(limit,offset);
 		return await prisma.user.findMany({
-			take: limit ? parseInt(limit) : undefined,
-			skip: offset ? parseInt(limit) : undefined
+			take: limit,
+			skip: offset 
 		});
 	}
 	async destroy(id : string): Promise<void> {

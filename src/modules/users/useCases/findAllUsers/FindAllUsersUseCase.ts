@@ -6,8 +6,14 @@ interface IFindAllUsersUseCase {
 }
 class FindAllUsersUseCase {
 	constructor(private userRepository: IUserRepository) {}
-	async execute({limit = null, offset = null} : IFindAllUsersUseCase) {
-		return await this.userRepository.findAll({limit, offset});
+	async execute({limit = undefined, offset = undefined} : IFindAllUsersUseCase) {
+		if( (isNaN(parseInt(limit)) && limit != undefined) || (isNaN(parseInt(offset)) && offset != undefined) ) {
+			throw new Error("Query params [limit or offset] should be a number");
+		}
+		return await this.userRepository.findAll({
+			limit: limit ? parseInt(limit) : undefined,
+			offset: offset ? parseInt(offset) : undefined
+		});
 	}
 }
 
