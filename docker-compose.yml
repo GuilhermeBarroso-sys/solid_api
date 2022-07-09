@@ -10,7 +10,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=S3cret
       - MYSQL_PASSWORD=S3cret
-      - MYSQL_USER=docker_user
+      - MYSQL_ROOT_USER=docker_user
       - MYSQL_DATABASE=solid_api
   app_dev:  
     build:
