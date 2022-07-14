@@ -15,6 +15,7 @@ describe("Testing Create User Controller", () => {
 			createMany: async () => {throw new Error("error");},
 			findByEmail: async () => {return {id: "",username: "", email: "", password: hashedPassword};},
 			destroy: async () => {},
+destroyMany: async () => {},
 			update: async () => {},
 			findUser: async () => {return {id: "",username: "", email: "", password: ""};}
 		}); 
@@ -39,6 +40,7 @@ describe("Testing Create User Controller", () => {
 			createMany: async () => {throw new Error("error");},
 			findByEmail: async () => {return {id: "",username: "", email: "", password: hashedPassword};},
 			destroy: async () => {},
+destroyMany: async () => {},
 			update: async () => {},
 			findUser: async () => {return {id: "",username: "", email: "", password: ""};}
 		}); 
@@ -61,6 +63,7 @@ describe("Testing Create User Controller", () => {
 			createMany: async () => {throw new Error("error");},
 			findByEmail: async () => {return null;},
 			destroy: async () => {},
+destroyMany: async () => {},
 			update: async () => {},
 			findUser: async () => {return {id: "",username: "", email: "", password: ""};}
 		}); 
@@ -83,6 +86,7 @@ describe("Testing Create User Controller", () => {
 			createMany: async () => {throw new Error("error");},
 			findByEmail: async () => {return null;},
 			destroy: async () => {},
+destroyMany: async () => {},
 			update: async () => {},
 			findUser: async () => {return {id: "",username: "", email: "", password: ""};}
 		}); 

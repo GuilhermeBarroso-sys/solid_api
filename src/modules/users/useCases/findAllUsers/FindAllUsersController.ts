@@ -8,7 +8,6 @@ class FindAllUsersController {
 		const offset = request.query.offset as string;
 
 		try {
-			console.log(limit,offset);
 			const users = await this.findAllUsersUseCase.execute({limit,offset});
 			return response.status(200).json(users);
 		} catch(err) {

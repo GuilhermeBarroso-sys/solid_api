@@ -29,5 +29,6 @@ export interface IUserRepository {
 	findByEmail(email : string) : Promise<IUserFind>
 	findAll({limit,offset} : IFindAllParams) : Promise<IUserFind[]>
 	destroy(id : string) : Promise<void>
+	destroyMany(ids: Array<string>) : Promise<void>
 	update(id : string, data : IUserEdit) : Promise<void>
 }

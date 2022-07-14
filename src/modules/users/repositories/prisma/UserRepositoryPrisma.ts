@@ -44,6 +44,15 @@ class UserRepositoryPrisma implements IUserRepository {
 			}
 		});
 	}
+	async destroyMany(ids : Array<string>): Promise<void> {
+		await prisma.user.deleteMany({
+			where: {
+				id: {
+					in: ids
+				}
+			}
+		});
+	}
 	async update(id: string, data: IUserEdit): Promise<void> {
 		await prisma.user.update({
 			data,

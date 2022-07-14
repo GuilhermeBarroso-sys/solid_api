@@ -15,6 +15,7 @@ import { UpdateUserFactory } from "../modules/users/useCases/updateUser";
 import { DestroyUserFactory } from "../modules/users/useCases/destroyUser";
 import { GetAuthenticateUserFactory } from "../modules/users/useCases/getAuthenticateUser";
 import { FindAllUsersFactory } from "../modules/users/useCases/findAllUsers";
+import { DestroyManyUsersFactory } from "../modules/users/useCases/destroyManyUsers";
 const usersRoutes = Router();
 const upload = multer({
 	dest: "./tmp"
@@ -57,6 +58,9 @@ usersRoutes.put("/:id", ensureAuthenticate ,async (request, response) => {
 	return UpdateUserFactory().handle(request,response);
 });
 
+usersRoutes.delete("/", ensureAuthenticate ,async (request, response) => {
+	return DestroyManyUsersFactory().handle(request,response);
+});
 usersRoutes.delete("/:id", ensureAuthenticate ,async (request, response) => {
 	return DestroyUserFactory().handle(request,response);
 });

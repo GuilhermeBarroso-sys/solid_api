@@ -6,6 +6,7 @@ describe("Testing User Create", () => {
 		findAll: async () => {return {...[]}; },
 		createMany: async () => {throw new Error("error");},
 		destroy: async () => {},
+		destroyMany: async () => {},
 		update: async () => {},
 		findByEmail: async () => {return null;},
 		findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}

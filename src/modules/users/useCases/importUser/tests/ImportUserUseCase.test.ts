@@ -31,6 +31,7 @@ describe("Testing Import User Use Case", () => {
 		findAll: async () => {return {...[]}; },
 		createMany: async () => {},
 		destroy: async () => {},
+destroyMany: async () => {},
 		update: async () => {},
 		findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};},
 		findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}

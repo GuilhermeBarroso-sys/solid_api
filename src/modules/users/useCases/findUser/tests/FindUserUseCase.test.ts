@@ -9,6 +9,7 @@ describe("Testing Find User", ()=> {
 			findAll: async () => {return {...[]}; },
 			createMany: async () => {throw new Error("error");},
 			destroy: async () => {},
+destroyMany: async () => {},
 			update: async () => {},
 			findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};},
 			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
