@@ -2,16 +2,14 @@ version: '3.7'
 
 services:
   mysql:
-    image: mysql:8
+    image: mysql:latest
+    container_name: solidapi-mysql
+    restart: always
     ports:
-      - 3306:3306
-    volumes:
-      - ~/apps/mysql:/var/lib/mysql
+    - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=S3cret
-      - MYSQL_PASSWORD=S3cret
-      - MYSQL_ROOT_USER=docker_user
-      - MYSQL_DATABASE=solid_api
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: solidapi
   app_dev:  
     build:
       context: .

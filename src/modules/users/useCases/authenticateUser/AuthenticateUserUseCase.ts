@@ -13,7 +13,7 @@ interface IResponse {
 class AuthenticateUserUseCase {
 	constructor(private userRepository : IUserRepository) {}
 	async execute({email,password} : IAuthenticateUserUseCase) : Promise<IResponse> {
-		if(!email && !password) throw new Error("Missing params. Please, provider a email and password params");
+		if(!email && !password) throw new Error("Missing params. Please, provider an email and password params");
 		const user = await this.userRepository.findByEmail(email);
 		if(!user) throw new Error("This email doesn't exist!");
 		const isCorrectPassword = await compare(password, user.password);

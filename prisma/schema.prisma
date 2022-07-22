@@ -9,14 +9,87 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
-
 }
 
 model User {
-  id       String @id @default(uuid())
-  username String
-  email    String @unique
-  password String
+  id             String          @id @default(uuid())
+  username       String
+  email          String          @unique
+  password       String
+  privileges     Privileges      @default(user)
+  profilePicture String?
+  Post           Post[]
+  Category       Category[]
+  UserStatistic  UserStatistic[]
+  PostLikes      PostLikes[]
+  PostComment    PostComment[]
 
   @@map("users")
+}
+
+model Post {
+  id          String        @id @default(uuid())
+  title       String
+  body        String        @db.Text
+  uriTitle    String
+  createdBy   User          @relation(fields: [createdById], references: [id])
+  createdById String
+  Category    Category?     @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  PostLikes   PostLikes[]
+  PostComment PostComment[]
+
+  @@index([title])
+  @@map("posts")
+}
+
+model Category {
+  id          String @id @default(uuid())
+  title       String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById String
+  Post        Post[]
+
+  @@index([title])
+  @@map("categories")
+}
+
+model UserStatistic {
+  id                String  @id @default(uuid())
+  comments          Int     @default(0)
+  likes             Int     @default(0)
+  postsCreated      Int     @default(0)
+  categoriesCreated Int     @default(0)
+  User              User?   @relation(fields: [userId], references: [id])
+  userId            String?
+
+  @@map("userStatistics")
+}
+
+model PostLikes {
+  id     String  @id @default(uuid())
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  Post   Post?   @relation(fields: [postId], references: [id])
+  postId String?
+
+  @@map("postLikes")
+}
+
+model PostComment {
+  id      String  @id @default(uuid())
+  comment String  @db.Text
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  Post    Post?   @relation(fields: [postId], references: [id])
+  postId  String?
+
+  @@map("postComments")
+}
+
+enum Privileges {
+  root
+  admin
+  vip
+  user
 }

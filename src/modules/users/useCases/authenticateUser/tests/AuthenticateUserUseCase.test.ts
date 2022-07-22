@@ -19,7 +19,7 @@ destroyMany: async () => {},
 			findByEmail: async () => {return null;},
 			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
 		}); 
-		await expect(authenticateUserUseCaseMock.execute(userMock)).rejects.toThrowError("Missing params. Please, provider a email and password params");
+		await expect(authenticateUserUseCaseMock.execute(userMock)).rejects.toThrowError("Missing params. Please, provider an email and password params");
 	});
 
 	it("shouldn't be able authenticate a user because email doesn't exist", async () => {
