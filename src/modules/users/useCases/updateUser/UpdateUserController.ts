@@ -6,11 +6,12 @@ class UpdateUserController {
 	async handle(request : Request, response : Response) {
 		try {
 			const {id} = request.params;
-			const {username, email, password} = request.body;
+			const {username, email, password, privileges} = request.body;
 			const data = {
 				username,
 				email,
-				password
+				password,
+				privileges
 			};
 			await this.updateUserUseCase.execute({id, data});
 			return response.status(204).send();

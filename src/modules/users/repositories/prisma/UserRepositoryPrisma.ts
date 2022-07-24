@@ -10,12 +10,14 @@ class UserRepositoryPrisma implements IUserRepository {
 			}
 		});
 	}
-	async create({username, email, password}: IUser): Promise<void> {
+	async create({username, email, password,profilePicture, privileges}: IUser): Promise<void> {
 		await prisma.user.create({
 			data: {
 				username,
 				email,
-				password
+				password,
+				privileges,
+				profilePicture
 			}
 		});
 	}
@@ -31,10 +33,14 @@ class UserRepositoryPrisma implements IUserRepository {
 			}
 		});
 	}
-	async findAll({limit,offset} : IFindAllParams): Promise<IUserFind[]> {
+	async findAll({limit,offset, getStatistics = false} : IFindAllParams): Promise<IUserFind[]> {
+		
 		return await prisma.user.findMany({
 			take: limit,
-			skip: offset
+			skip: offset,
+			include: {
+				UserStatistic: getStatistics
+			}
 		});
 	}
 	async destroy(id : string): Promise<void> {

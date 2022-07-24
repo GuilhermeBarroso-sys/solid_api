@@ -9,8 +9,10 @@ export async function ensureAuthenticate(request : Request, response : Response,
 	if(!authToken) return response.status(401).json("Token Not Found");
 	const [,token] = authToken.split(" ");
 	try {
-		const { sub : id } = verify(token, process.env.JWT_SECRET) as IJWTPayload;
-		request.user_id = id;
+		const { sub } = verify(token, process.env.JWT_SECRET) as IJWTPayload;
+		const [user_id, privilege] = sub.split("#");
+		request.user_id = user_id;
+		request.privilege = privilege;
 		return next();
 	} catch (err) { 
 		return response.status(401).json(err.message);

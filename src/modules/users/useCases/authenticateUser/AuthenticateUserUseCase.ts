@@ -19,7 +19,7 @@ class AuthenticateUserUseCase {
 		const isCorrectPassword = await compare(password, user.password);
 		if(!isCorrectPassword) throw new Error("Wrong Password!");
 		delete user.password;
-		const token = sign(user, process.env.JWT_SECRET, {subject: user.id});
+		const token = sign(user, process.env.JWT_SECRET, {subject: `${user.id}#${user.privileges}`});
 		return {user,token};
 	}
 }

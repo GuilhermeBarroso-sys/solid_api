@@ -16,6 +16,7 @@ import { DestroyUserFactory } from "../modules/users/useCases/destroyUser";
 import { GetAuthenticateUserFactory } from "../modules/users/useCases/getAuthenticateUser";
 import { FindAllUsersFactory } from "../modules/users/useCases/findAllUsers";
 import { DestroyManyUsersFactory } from "../modules/users/useCases/destroyManyUsers";
+import { ensureAdminPrivileges } from "../middlewares/ensureAdminPrivileges";
 const usersRoutes = Router();
 const upload = multer({
 	dest: "./tmp"
@@ -38,7 +39,7 @@ usersRoutes.post("/authenticate", (request,response) => {
 	return AuthenticateUserFactory().handle(request, response);
 });
 
-usersRoutes.post("/", (request,response) => {
+usersRoutes.post("/", ensureAuthenticate, ensureAdminPrivileges ,(request,response) => {
 	return createUserFactory().handle(request, response);
 });
 
