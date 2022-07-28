@@ -1,9 +1,6 @@
 import { Router } from "express";
-import multer from "multer";
-import {parse} from "csv-parse";
 import { createUserFactory } from "../modules/users/useCases/createUser";
 import { FindUserFactory } from "../modules/users/useCases/findUser";
-import fs from "fs";
 import { ImportUserFactory } from "../modules/users/useCases/importUser";
 import { AuthenticateUserFactory } from "../modules/users/useCases/authenticateUser";
 import { ensureAuthenticate } from "../middlewares/ensureAuthenticate";
@@ -18,9 +15,9 @@ import { FindAllUsersFactory } from "../modules/users/useCases/findAllUsers";
 import { DestroyManyUsersFactory } from "../modules/users/useCases/destroyManyUsers";
 import { ensureAdminPrivileges } from "../middlewares/ensureAdminPrivileges";
 const usersRoutes = Router();
-const upload = multer({
-	dest: "./tmp"
-});
+// const upload = multer({
+// 	dest: "./tmp"
+// });
 
 usersRoutes.get("/email/:email", ensureAuthenticate, (request, response) => {
 	return FindUserByEmailFactory().handle(request,response);
@@ -43,9 +40,9 @@ usersRoutes.post("/", ensureAuthenticate, ensureAdminPrivileges ,(request,respon
 	return createUserFactory().handle(request, response);
 });
 
-usersRoutes.post("/import", ensureAuthenticate , upload.single("file"), async (request,response) => {
-	return ImportUserFactory().handle(request, response);
-});
+// usersRoutes.post("/import", ensureAuthenticate , upload.single("file"), async (request,response) => {
+// 	return ImportUserFactory().handle(request, response);
+// });
 
 usersRoutes.post("/sendEmailToRecoveryPassword", ensureAuthenticate ,async (request, response) => {
 	return SendEmailToRecoveryPasswordFactory().handle(request, response);
