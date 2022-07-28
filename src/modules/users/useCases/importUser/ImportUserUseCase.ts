@@ -8,7 +8,6 @@ interface IUser {
 	username: string;
 	email: string
 	password: string;
-	privileges: "user" | "vip" | "admin" | "root"
 }
 
 
@@ -27,9 +26,9 @@ class ImportUserUseCase {
 			parseFile
 				.on("data", async (data) => {	
 
-					const [username,email, password, privileges] = data;
+					const [username,email, password] = data;
           
-					users.push({username,email, password, privileges});
+					users.push({username,email, password});
 				})
 				.on("end", async () => {
 					await unlink(path);
