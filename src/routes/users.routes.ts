@@ -3,7 +3,6 @@ import multer from "multer";
 import {parse} from "csv-parse";
 import { createUserFactory } from "../modules/users/useCases/createUser";
 import { FindUserFactory } from "../modules/users/useCases/findUser";
-import fs from "fs";
 import { ImportUserFactory } from "../modules/users/useCases/importUser";
 import { AuthenticateUserFactory } from "../modules/users/useCases/authenticateUser";
 import { ensureAuthenticate } from "../middlewares/ensureAuthenticate";

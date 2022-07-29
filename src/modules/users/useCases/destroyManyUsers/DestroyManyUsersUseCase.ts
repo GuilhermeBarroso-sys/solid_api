@@ -1,16 +1,18 @@
-import { isValidParams } from "../../../../handlers/isValidparams";
+
+import { createThrowError } from "../../../../errors/createThrowError";
 import { IUserRepository } from "../../repositories/IUserRepository";
 
 class DestroyManyUsersUseCase {
 	constructor(private userRepository : IUserRepository) {}
   
 	async execute(queryParamsIds : string) {
-		const isValid = isValidParams([queryParamsIds]);
-		if(!isValid) {
-			throw new Error("Invalid param!");
-		}
 		const ids = queryParamsIds.split(",");
-		await this.userRepository.destroyMany(ids);
+		const count = await this.userRepository.destroyMany(ids);
+		if(!count) {
+			throw createThrowError({
+				name: "unprocessableEntity"
+			});
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 import { IUserFind, IUserRepository } from "../../repositories/IUserRepository";
 import {compare} from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import { createThrowError } from "../../../../errors/createThrowError";
 interface IAuthenticateUserUseCase {
 	email: string;
 	password: string;
@@ -13,13 +14,16 @@ interface IResponse {
 class AuthenticateUserUseCase {
 	constructor(private userRepository : IUserRepository) {}
 	async execute({email,password} : IAuthenticateUserUseCase) : Promise<IResponse> {
-		if(!email && !password) throw new Error("Missing params. Please, provider an email and password params");
 		const user = await this.userRepository.findByEmail(email);
-		if(!user) throw new Error("This email doesn't exist!");
+		if(!user) {
+			throw createThrowError({name: "userNotExists"});
+		}
 		const isCorrectPassword = await compare(password, user.password);
-		if(!isCorrectPassword) throw new Error("Wrong Password!");
+		if(!isCorrectPassword) {
+			throw createThrowError({name: "wrongCredentials"});
+		}
 		delete user.password;
-		const token = sign(user, process.env.JWT_SECRET, {subject: `${user.id}#${user.privileges}`});
+		const token = sign(user, process.env.JWT_SECRET, {subject: `${user.id}#${user.privileges}`, expiresIn: "7d"});
 		return {user,token};
 	}
 }

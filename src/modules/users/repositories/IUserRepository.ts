@@ -40,7 +40,7 @@ export interface IUserRepository {
 	findUser(id : string) : Promise<IUserFind>
 	findByEmail(email : string) : Promise<IUserFind>
 	findAll({limit,offset} : IFindAllParams) : Promise<IUserFind[]>
-	destroy(id : string) : Promise<void>
-	destroyMany(ids: Array<string>) : Promise<void>
+	destroy(id : string) : Promise<void|number>
+	destroyMany(ids: Array<string>) : Promise<void|number>
 	update(id : string, data : IUserEdit) : Promise<void>
 }

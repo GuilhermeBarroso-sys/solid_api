@@ -34,7 +34,6 @@ class UserRepositoryPrisma implements IUserRepository {
 		});
 	}
 	async findAll({limit,offset, getStatistics = false} : IFindAllParams): Promise<IUserFind[]> {
-		
 		return await prisma.user.findMany({
 			take: limit,
 			skip: offset,
@@ -42,22 +41,24 @@ class UserRepositoryPrisma implements IUserRepository {
 				UserStatistic: getStatistics
 			}
 		});
+		
 	}
-	async destroy(id : string): Promise<void> {
+	async destroy(id : string): Promise<void|number> {
 		await prisma.user.delete({
 			where: {
 				id
 			}
 		});
 	}
-	async destroyMany(ids : Array<string>): Promise<void> {
-		await prisma.user.deleteMany({
+	async destroyMany(ids : Array<string>): Promise<void|number> {
+		const {count} = await prisma.user.deleteMany({
 			where: {
 				id: {
 					in: ids
 				}
 			}
 		});
+		return count;
 	}
 	async update(id: string, data: IUserEdit): Promise<void> {
 		await prisma.user.update({

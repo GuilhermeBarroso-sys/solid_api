@@ -5,6 +5,8 @@ import swagger from "swagger-ui-express";
 import { routes } from "./routes";
 import swaggerDoc from "./docs/swagger.json"; 
 import cors from "cors";
+import { hashSync } from "bcryptjs";
+import { randomUUID } from "crypto";
 const app = express();
 app.use(cors({
 	// origin: process.env.production ? "production_react_link" : "*"
