@@ -16,6 +16,7 @@ class DestroyManyUsersController {
 			await this.destroyManyUsersUseCase.execute(ids);
 			return response.status(204).send();
 		} catch(err) {
+
 			const {status, message} = handlerError(err);
 			return response.status(status).json(message);
 		}

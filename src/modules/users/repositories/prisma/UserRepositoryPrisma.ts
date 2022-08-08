@@ -1,8 +1,13 @@
-
+import { SQLStatement } from "sql-template-strings";
 import { prisma } from "../../../../prisma";
 import {IFindAllParams, IUser, IUserEdit, IUserFind, IUserRepository} from "../IUserRepository";
 
 class UserRepositoryPrisma implements IUserRepository {
+
+	async custom(query:  SQLStatement|any): Promise<IUserFind[]> {
+		return await prisma.$queryRaw<IUserFind[]>(query);
+	}
+
 	async findByEmail(email: string): Promise<IUserFind> {
 		return await prisma.user.findFirst({
 			where:{
@@ -33,13 +38,12 @@ class UserRepositoryPrisma implements IUserRepository {
 			}
 		});
 	}
-	async findAll({limit,offset, getStatistics = false} : IFindAllParams): Promise<IUserFind[]> {
+	async findAll({limit,offset,select, where} : IFindAllParams): Promise<IUserFind[]> {
 		return await prisma.user.findMany({
 			take: limit,
 			skip: offset,
-			include: {
-				UserStatistic: getStatistics
-			}
+			select: select ? select : undefined,
+			where: where ? where : undefined
 		});
 		
 	}

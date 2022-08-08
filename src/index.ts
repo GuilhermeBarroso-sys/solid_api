@@ -3,7 +3,6 @@ import express from "express";
 import rateLimit from "express-rate-limit";
 import swagger from "swagger-ui-express";
 import { routes } from "./routes";
-import swaggerDoc from "./docs/swagger.json"; 
 import cors from "cors";
 import { hashSync } from "bcryptjs";
 import { randomUUID } from "crypto";
@@ -23,7 +22,6 @@ app.use(
 	})
 );
 app.use(routes);
-app.use("/docs", swagger.serve, swagger.setup(swaggerDoc));
 const port = process.env.PORT;
 app.listen(port, process.env.NODE_ENV == "development" && (() => {
 	console.log("Server running at port", port);

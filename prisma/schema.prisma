@@ -23,6 +23,7 @@ model User {
   PostLikes      PostLikes[]
   PostComment    PostComment[]
 
+  @@index([email])
   @@map("users")
 }
 
@@ -38,7 +39,6 @@ model Post {
   PostLikes   PostLikes[]
   PostComment PostComment[]
 
-  @@index([title])
   @@map("posts")
 }
 
@@ -68,7 +68,7 @@ model UserStatistic {
 model PostLikes {
   id     String  @id @default(uuid())
   User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  userId String? @unique
   Post   Post?   @relation(fields: [postId], references: [id])
   postId String?
 

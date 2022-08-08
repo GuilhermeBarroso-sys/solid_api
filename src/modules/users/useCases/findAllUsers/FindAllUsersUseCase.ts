@@ -1,23 +1,19 @@
-import { IUserRepository } from "../../repositories/IUserRepository";
+import { Prisma, Privileges } from "@prisma/client";
+import { Sql } from "@prisma/client/runtime";
+import SQL from "sql-template-strings";
+import { IUserRepository, TPrivileges } from "../../repositories/IUserRepository";
 
 interface IFindAllUsersUseCase {
-	limit?: string
-	offset?: string
+	privileges: TPrivileges
 }
 class FindAllUsersUseCase {
 	constructor(private userRepository: IUserRepository) {}
-	async execute({limit = undefined, offset = undefined} : IFindAllUsersUseCase) {
-		if( (isNaN(parseInt(limit)) && limit != undefined) || (isNaN(parseInt(offset)) && offset != undefined) ) {
-			throw new Error("Query params [limit or offset] should be a number");
-		}
-		const allUsers = await this.userRepository.findAll({
-			limit: limit ? parseInt(limit) : undefined,
-			offset: offset ? parseInt(offset) : undefined
-		});
-		return allUsers.map(user => {
-			delete user.password;
-			return user;
-		});
+	async execute({privileges} : IFindAllUsersUseCase) {
+		const query = privileges === "root" 
+			? SQL`SELECT id,username,email,privileges FROM users WHERE privileges != 'root' ` 
+			: SQL`SELECT id,username,email,privileges FROM users WHERE privileges NOT IN('root', 'admin')`;
+		const allUsers = await this.userRepository.custom(query);
+		return allUsers;
 	}
 }
 

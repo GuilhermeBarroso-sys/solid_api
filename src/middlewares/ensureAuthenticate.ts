@@ -10,9 +10,9 @@ export async function ensureAuthenticate(request : Request, response : Response,
 	const [,token] = authToken.split(" ");
 	try {
 		const { sub } = verify(token, process.env.JWT_SECRET) as IJWTPayload;
-		const [user_id, privilege] = sub.split("#");
+		const [user_id, privileges] = sub.split("#");
 		request.user_id = user_id;
-		request.privilege = privilege;
+		request.privileges = privileges;
 		return next();
 	} catch (err) { 
 		return response.status(401).json(err.message);

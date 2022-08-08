@@ -1,5 +1,6 @@
 import { IUserEdit, IUserRepository } from "../../repositories/IUserRepository";
 import bcrypt from "bcryptjs";
+import { createThrowError } from "../../../../errors/createThrowError";
 interface IUpdateUser {
 	id: string
 	data: IUserEdit
@@ -7,11 +8,26 @@ interface IUpdateUser {
 class UpdateUserUseCase {
 	constructor (private userRepository : IUserRepository) {}
 	async execute({id, data} : IUpdateUser ) {
-		const userExists = await this.userRepository.findUser(id);
-		if(!userExists) throw new Error("This user doesn't exist!");
-		const {username,email,password, privileges} = data;
-		if(!username && !email && !password && !privileges) throw new Error("Invalid Data! Please, provider at least one the information: [username,email,password]");
-		if(password) data.password = await bcrypt.hash(password, 10);
+
+		const userThatGonnaUpdating = await this.userRepository.findUser(id);
+		if(data.authenticateUserPrivileges != "root") {
+
+			if(userThatGonnaUpdating.privileges == "root" || userThatGonnaUpdating.privileges == "admin") {
+				const error =  createThrowError({name: "forbidden", message: "Insufficient Permission"});
+				throw error;
+			}
+
+			if(data.authenticateUserPrivileges != "admin" && userThatGonnaUpdating.id !==  data.authenticateUserId) {
+				const error =  createThrowError({name: "forbidden", message: "Insufficient Permission"});
+				throw error;
+			}
+      
+		}
+
+		if(data.password) data.password = await bcrypt.hash(data.password, 10);
+		if(data.authenticateUserPrivileges === "user" || data.authenticateUserPrivileges === "vip") delete data.privileges;
+		delete data.authenticateUserPrivileges;
+		delete data.authenticateUserId;
 		await this.userRepository.update(id, data);
 	}
 }
