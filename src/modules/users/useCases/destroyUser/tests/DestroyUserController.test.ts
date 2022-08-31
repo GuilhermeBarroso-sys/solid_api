@@ -1,8 +1,33 @@
 import { getMockReq, getMockRes } from "@jest-mock/express";
+import { Validator } from "../../../../../handlers/Validator";
+import { UserRepositoryMock } from "../../../../../mocks/users/userRepositoryMock";
 import { DestroyUserController } from "../DestroyUserController";
 import { DestroyUserUseCase } from "../DestroyUserUseCase";
 
-describe("testign destroy user controller", ()=> {
+describe("testing destroy user controller", ()=> {
+	it("Shouldn't be pass in validation", async () => {
+		const request = getMockReq({
+			params: {
+				id: "123"
+			},
+			body: {
+				username: "test",
+				email:    "test@gmail.com",
+				password: "test"
+			}
+		});
+		const {res : response} = getMockRes();
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {error: true, message: "someError"};
+		});
+		const destroyUserUseCase = new DestroyUserUseCase(UserRepositoryMock());
+		jest.spyOn(destroyUserUseCase, "execute").mockImplementation(async () => {
+			return null;
+		});
+		const updateUserController = new DestroyUserController(destroyUserUseCase);
+		await updateUserController.handle(request,response);
+		expect(response.status).toBeCalledWith(400);
+	});
 	it("Should be return status code 204" , async () => {
 		const request = getMockReq({
 			params: {
@@ -15,24 +40,19 @@ describe("testign destroy user controller", ()=> {
 			}
 		});
 		const {res : response} = getMockRes();
-
-		const destroyUserUseCase = new DestroyUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};},
-			findUser: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};}
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {error: false, message: null};
 		});
-		destroyUserUseCase.execute = async () => {};
+		const destroyUserUseCase = new DestroyUserUseCase(UserRepositoryMock());
+		jest.spyOn(destroyUserUseCase, "execute").mockImplementation(async () => {
+			return null;
+		});
 		const updateUserController = new DestroyUserController(destroyUserUseCase);
 		await updateUserController.handle(request,response);
 		expect(response.status).toBeCalledWith(204);
 
 	});
-	it("Should be return status code 400 with throw error" , async () => {
+	it("Should be throw an error with status code 500" , async () => {
 		const request = getMockReq({
 			params: {
 				id: "123"
@@ -44,21 +64,16 @@ destroyMany: async () => {},
 			}
 		});
 		const {res : response} = getMockRes();
-
-		const destroyUserUseCase = new DestroyUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};},
-			findUser: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};}
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {error: false, message: null};
 		});
-		destroyUserUseCase.execute = async () => {throw new Error("");};
+		const destroyUserUseCase = new DestroyUserUseCase(UserRepositoryMock());
+		jest.spyOn(destroyUserUseCase, "execute").mockImplementation( async () => {
+			throw new Error("database error!");
+		});
 		const updateUserController = new DestroyUserController(destroyUserUseCase);
 		await updateUserController.handle(request,response);
-		expect(response.status).toBeCalledWith(400);
+		expect(response.status).toBeCalledWith(500);
 
 	});
 });

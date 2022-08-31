@@ -1,79 +1,42 @@
 import { UserRepositoryPrisma } from "../../../repositories/prisma/UserRepositoryPrisma";
 import {IUser} from "../../../repositories/IUserRepository";
+import bcrypt from "bcryptjs";
 import { AuthenticateUserUseCase } from "../AuthenticateUserUseCase";
 import {hash, hashSync} from "bcryptjs";
+import {UserRepositoryMock} from "../../../../../mocks/users/userRepositoryMock";
+
 describe("Testing User Create", () => {
-	it("Should throw a missing params error", async () => {
-		const userMock : IUser = {
-			username: undefined,
+	it("Should to be throw an error because user doesn't exist", async () => {
+		const userMock  = {
 			email: undefined,
-			password: undefined
+			password: undefined,
+
 		};
-		const authenticateUserUseCaseMock = new AuthenticateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return null;},
-			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
-		}); 
-		await expect(authenticateUserUseCaseMock.execute(userMock)).rejects.toThrowError("Missing params. Please, provider an email and password params");
+		const authenticateUserUseCaseMock = new AuthenticateUserUseCase(UserRepositoryMock(null)); 
+		await expect(authenticateUserUseCaseMock.execute(userMock)).rejects.toThrow();
 	});
 
-	it("shouldn't be able authenticate a user because email doesn't exist", async () => {
-		const authenticateUserUseCaseMock = new AuthenticateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return null;},
-			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
-		}); 
+	it("Should to be throw an error because the user password is wrong", async () => {
+		const authenticateUserUseCaseMock = new AuthenticateUserUseCase(UserRepositoryMock({
+			password: "123"
+		})); 
 		const userErrorMock = {
-			email: "123",
+			email: "test@gmail.com",
 			password: "1234123",
 		};
-		await expect(authenticateUserUseCaseMock.execute(userErrorMock)).rejects.toThrowError("This email doesn't exist!");
+		await expect(authenticateUserUseCaseMock.execute(userErrorMock)).rejects.toThrow();
 	});
-	it("shouldn't be able authenticate a user because password is wrong", async () => {
-		const hashedPassword = await hash("1234123", 1);
-		const authenticateUserUseCaseMock = new AuthenticateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: hashedPassword};},
-			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
-		}); 
+	it("should to be return a user and token", async () => {
+		jest.spyOn(bcrypt, "compare").mockImplementation(async () => {
+			return true;
+		});
+		const authenticateUserUseCaseMock = new AuthenticateUserUseCase(UserRepositoryMock()); 
 		const userErrorMock = {
 			email: "123",
-			password: "123",
-		};
-		await expect(authenticateUserUseCaseMock.execute(userErrorMock)).rejects.toThrowError("Wrong Password!");
-	});
-	it("should be able authenticate a user ", async () => {
-		const hashedPassword = await hash("1234123", 1);
-		const authenticateUserUseCaseMock = new AuthenticateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: hashedPassword};},
-			findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
-		}); 
-		const userErrorMock = {
-			email: "123",
-			password: "1234123",
+			password: await hash("123", 1),
 		};
 		await expect(authenticateUserUseCaseMock.execute(userErrorMock)).resolves.not.toThrow();
 	});
+
 
 });

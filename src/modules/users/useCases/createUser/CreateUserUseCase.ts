@@ -5,7 +5,7 @@ interface IRequest {
 	email : string;
 	password: string;
 	privileges: "user" | "vip" | "admin" | "root",
-	profilePicture: string | null
+	profilePicture?: string | null
 }
 class CreateUserUseCase {
   

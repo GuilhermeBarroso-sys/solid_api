@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { handlerError } from "../../../../errors";
-import { isValid } from "../../../../handlers/isValid";
+import { Error } from "../../../../errors";
+import {  Validator } from "../../../../handlers/Validator";
 import { DestroyManyUsersUseCase } from "./DestroyManyUsersUseCase";
 import { schema } from "./validation/schema";
 
@@ -9,7 +9,7 @@ class DestroyManyUsersController {
 	async handle(request: Request, response: Response) {
 		try {
 			const ids = request.query.ids as string;
-			const {error, message} = isValid({ids}, schema);
+			const {error, message} = Validator.isValid({ids}, schema);
 			if(error) {
 				return response.status(400).json(message);
 			}
@@ -17,7 +17,7 @@ class DestroyManyUsersController {
 			return response.status(204).send();
 		} catch(err) {
 
-			const {status, message} = handlerError(err);
+			const {status, message} = Error.handlerError(err);
 			return response.status(status).json(message);
 		}
 	}

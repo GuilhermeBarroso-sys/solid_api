@@ -30,8 +30,8 @@ export interface IUserEdit {
 	password?: string;
 	profilePicture?: string | null
 	privileges?: TPrivileges
-	authenticateUserPrivileges: TPrivileges
-	authenticateUserId: string
+	authenticateUserPrivileges?: TPrivileges
+	authenticateUserId?: string
 }
 
 export interface IFindAllParams {

@@ -3,7 +3,7 @@ import { sign } from "jsonwebtoken";
 import { v4 } from "uuid";
 import { ensureAuthenticate } from "../ensureAuthenticate";
 describe("Testing authenticate middleware", () => {
-	it("should be able call next function", async() => {
+	it("should be able pass in the middleware", async() => {
 		const userIdMock = v4();
 		const token = sign(userIdMock, process.env.JWT_SECRET);
 		const request = getMockReq({
@@ -12,13 +12,9 @@ describe("Testing authenticate middleware", () => {
 			}
 		});
 		const {res : response} = getMockRes();
-		const nextFunctionMock = {
-			next: () => {}
-		};
-		jest.spyOn(nextFunctionMock, "next");
-		const {next} = nextFunctionMock;
-		await ensureAuthenticate(request, response, next);
-		expect(next).toHaveBeenCalled();
+
+		await ensureAuthenticate(request, response, () => {});
+		expect(response.status).not.toBe(401);
 	});
 	it("should be return error because token is empty", async () => {
 		const userIdMock = v4();

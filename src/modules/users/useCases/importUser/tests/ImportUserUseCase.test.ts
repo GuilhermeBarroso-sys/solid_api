@@ -4,6 +4,9 @@ import { IUser } from "../../../repositories/IUserRepository";
 import { v4 } from "uuid";
 import path from "path";
 import { parse } from "csv-parse/.";
+import { UserRepositoryMock } from "../../../../../mocks/users/userRepositoryMock";
+import {UserMock} from "../../../../../mocks/users/UserMock";
+import { randomUUID } from "crypto";
 jest.mock("fs");
 // jest.requireActual('')
 const mockedFs = fs as jest.Mocked<typeof fs>;
@@ -17,25 +20,18 @@ beforeAll(() => {
 			.on("data", async () => {})
 			.on("end", () => {});
 		const usersMock : IUser[] = [{
-			id: v4(),
+			id: randomUUID(),
+			username: "test",
 			email: "test@gmail.com",
-			username: "John",
-			password: "123" 
+			password: "1341241242",
+			privileges: "admin",
+			profilePicture: "https://..."
 		}];
 		return usersMock;
 	});
 });
 describe("Testing Import User Use Case", () => {
-	const importUserUseCase = new ImportUserUseCase({
-		create: async () => {},
-		findAll: async () => {return {...[]}; },
-		createMany: async () => {},
-		destroy: async () => {},
-destroyMany: async () => {},
-		update: async () => {},
-		findByEmail: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};},
-		findUser: async () => {return {id: "",username: "", email: "123@gmail.com", password: ""};}
-	}); 
+	const importUserUseCase = new ImportUserUseCase(UserRepositoryMock()); 
 	it("Should throw a file type Error", async () => {
 		const fileMockFileType : Express.Multer.File = {
 			fieldname: "file",

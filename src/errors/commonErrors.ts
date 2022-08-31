@@ -1,3 +1,5 @@
+
+
 export const commonErrors =  [
 	{
 		errorName: "P2002",
@@ -28,5 +30,10 @@ export const commonErrors =  [
 		errorName: "forbidden",
 		status: 403,
 		message: "forbidden"
+	},
+	{
+		errorName: "unauthorized",
+		status: 401,
+		message: "unauthorized"
 	}
 ];

@@ -3,53 +3,82 @@ import { ParamsDictionary } from "express-serve-static-core";
 import { CreateUserController } from "../CreateUserController";
 import { CreateUserUseCase } from "../CreateUserUseCase";
 import {getMockReq, getMockRes} from "@jest-mock/express";
+import { Validator } from "../../../../../handlers/Validator";
+import { UserRepositoryMock } from "../../../../../mocks/users/userRepositoryMock";
 describe("Testing Create User Controller", () => {
   
-	it("Should be able return a response with status Code 201", async () => {
-		const createUserUseCaseMock = new CreateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			findByEmail: async () => {return null;}, //this throw a error
-			destroy: async () => {},
-			destroyMany: async () => {},
-			update: async () => {},
-			findUser: async () => {return {id: "",username: "", email: "", password: ""};}
-		}); 
+	it("Shouldn't pass in the validator", async () => {
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {
+				error: true,
+				message: "Some error"
+			};
+		});
+		const createUserUseCase = new CreateUserUseCase( UserRepositoryMock()); 
+		jest.spyOn(createUserUseCase, "execute").mockImplementation(async () => {
+			return null;
+		});
 		const request = getMockReq({
 			body: {
-				username: "John",
-				email:"userMockwfaawfwfawfawfaawfwfa@gmail.com",
-				password: "SuperSecret"
+				email: null,
+				password: "1234123"
 			}
 		});
 		const {res : response} = getMockRes();
-		const createUserController = new CreateUserController(createUserUseCaseMock);
+		const createUserController = new CreateUserController(createUserUseCase);
 		await expect(createUserController.handle(request, response)).resolves.not.toThrow();
-		expect(response.status).toHaveBeenCalledWith(201);
-		expect(response.send).toHaveBeenCalled();
+		expect(response.status).toHaveBeenCalledWith(400);
 	});
 
-	it("should return a throw error with status Code 400", async () => {
-		const createUserUseCaseMock = new CreateUserUseCase({
-			create: async () => {throw new Error("error");},
-			createMany: async () => {throw new Error("error");},
-			findByEmail: async () => {return {id: "",username: "", email: "", password: ""};},
-			findAll: async () => {return {...[]}; },
-			destroy: async () => {},
-			destroyMany: async () => {},
-			update: async () => {},
-			findUser: async () => {return {id: "",username: "", email: "", password: ""};}
-		}); 
-		const request = getMockReq({body: {
-			username: "John",
-			email:"userMock@gmail.com",
-			password: "SuperSecret"
-		}});
-		const { res : response} = getMockRes();
-		const createUserController = new CreateUserController(createUserUseCaseMock);
-		await createUserController.handle(request,response);
-		expect(response.status).toHaveBeenCalledWith(400);
-		expect(response.json).toHaveBeenCalledWith("This email already exists!");
+	it("Should to be able to create a user", async () => {
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {
+				error: false,
+				message: null
+			};
+		});
+		const createUserUseCase = new CreateUserUseCase( UserRepositoryMock()); 
+		jest.spyOn(createUserUseCase, "execute").mockImplementation(async () => {
+			return null;
+		});
+		const request = getMockReq({
+			body: {
+				username: "test",
+				email: "g@gmail.com",
+				password: "1234123",
+				privileges: "admin",
+				profilePicture: null
+			}
+		});
+		const createUserController = new CreateUserController(createUserUseCase);
+		const {res : response} = getMockRes();
+		await expect(createUserController.handle(request, response)).resolves.not.toThrow();
+		expect(response.status).toHaveBeenCalledWith(201);
+	});
+
+	it("Should to be return an error with status code 500", async () => {
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {
+				error: false,
+				message: null
+			};
+		});
+		const createUserUseCase = new CreateUserUseCase( UserRepositoryMock(null, true)); 
+		jest.spyOn(createUserUseCase, "execute").mockImplementation(async () => {
+			throw new Error("");
+		});
+		const request = getMockReq({
+			body: {
+				username: "test",
+				email: "g@gmail.com",
+				password: "1234123",
+				privileges: "admin",
+				profilePicture: null
+			}
+		});
+		const createUserController = new CreateUserController(createUserUseCase);
+		const {res : response} = getMockRes();
+		await expect(createUserController.handle(request, response)).resolves;
+		expect(response.status).toHaveBeenCalledWith(500);
 	});
 });

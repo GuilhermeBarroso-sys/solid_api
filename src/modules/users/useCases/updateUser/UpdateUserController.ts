@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { handlerError } from "../../../../errors";
-import { isValid } from "../../../../handlers/isValid";
+import { Error } from "../../../../errors";
+import { Validator } from "../../../../handlers/Validator";
 import { UpdateUserUseCase } from "./UpdateUserUseCase";
 import { schema } from "./validation/schema";
 
@@ -11,7 +11,7 @@ class UpdateUserController {
 			const {id} = request.params;
 			const {privileges : authenticateUserPrivileges, user_id : authenticateUserId} = request;
 			const {username, email, password, privileges , profilePicture} = request.body;
-			const {error, message} = isValid({id, username ,email ,password, privileges, profilePicture}, schema);
+			const {error, message} = Validator.isValid({id, username ,email ,password, privileges, profilePicture}, schema);
 			if(error) {
 				return response.status(400).json(message);
 			}
@@ -26,7 +26,7 @@ class UpdateUserController {
 			await this.updateUserUseCase.execute({id, data});
 			return response.status(204).send();
 		} catch (err) {
-			const {message,status} = handlerError(err);
+			const {message,status} = Error.handlerError(err);
 			return response.status(status).json(message);
 		}
 	}

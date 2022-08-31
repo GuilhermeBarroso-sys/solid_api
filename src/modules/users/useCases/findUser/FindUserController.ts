@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { isValid } from "../../../../handlers/isValid";
+import { Validator } from "../../../../handlers/Validator";
 import { FindUserUseCase } from "./FindUserUseCase";
 import { schema } from "./validation/schema";
 
@@ -11,14 +11,14 @@ class FindUserController {
 		const {id} = request.params;
 
 		try {
-			const user = await this.findUserUseCase.execute(id);
-			const {error, message} = isValid({id}, schema);
+			const {error, message} = Validator.isValid({id}, schema);
 			if(error) {
 				return response.status(400).json(message);
 			}
+			const user = await this.findUserUseCase.execute(id);
 			return response.status(200).json(user);
 		} catch( err) {
-			return response.status(500).json(err.message);
+			return response.status(500).json("Server Error");
 		}
 	}
 }

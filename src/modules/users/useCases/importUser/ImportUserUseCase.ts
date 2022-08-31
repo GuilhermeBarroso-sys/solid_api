@@ -19,14 +19,13 @@ class ImportUserUseCase {
 	loadFile (path: string) : Promise<IUser[]>{
 		return new Promise((resolve, reject) => {
 			const users: Array<IUser> = [];
-  
 			const stream = fs.createReadStream(path);
 			// pipe conecta uma readable stream com uma writeable stream
 			const parseFile = parse();
 			stream.pipe(parseFile);
 			parseFile
-				.on("data", async (data) => {	
-
+				.on("data", async (data ) => {	
+          
 					const [username,email, password, privileges] = data;
           
 					users.push({username,email, password, privileges});

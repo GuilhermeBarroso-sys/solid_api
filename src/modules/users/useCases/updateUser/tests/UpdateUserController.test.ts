@@ -1,9 +1,17 @@
 import { getMockReq, getMockRes } from "@jest-mock/express";
+import { Validator } from "../../../../../handlers/Validator";
+import { UserRepositoryMock } from "../../../../../mocks/users/userRepositoryMock";
 import { UpdateUserController } from "../UpdateUserController";
 import { UpdateUserUseCase } from "../UpdateUserUseCase";
 
 describe("testing Update User Controller", () => {
-	it("Should be return status code 204" , async () => {
+	it("Shouldn't pass in the validator", async () => {
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {
+				error: true,
+				message: "Some Error"      
+			};
+		});
 		const request = getMockReq({
 			params: {
 				id: "123"
@@ -16,23 +24,45 @@ describe("testing Update User Controller", () => {
 		});
 		const {res : response} = getMockRes();
 
-		const updateUserUseCase = new UpdateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-			destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};},
-			findUser: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};}
+		const updateUserUseCase = new UpdateUserUseCase(UserRepositoryMock());
+		jest.spyOn(updateUserUseCase, "execute").mockImplementation(async () => {});
+		const updateUserController = new UpdateUserController(updateUserUseCase);
+		await updateUserController.handle(request,response);
+		expect(response.status).toBeCalledWith(400);
+	});
+	it("Should be return status code 204" , async () => {
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {
+				error: false,
+				message: null    
+			};
 		});
-		updateUserUseCase.execute = async () => {};
+		const request = getMockReq({
+			params: {
+				id: "123"
+			},
+			body: {
+				username: "test",
+				email:    "test@gmail.com",
+				password: "test"
+			}
+		});
+		const {res : response} = getMockRes();
+
+		const updateUserUseCase = new UpdateUserUseCase(UserRepositoryMock());
+		jest.spyOn(updateUserUseCase, "execute").mockImplementation(async () => {});
 		const updateUserController = new UpdateUserController(updateUserUseCase);
 		await updateUserController.handle(request,response);
 		expect(response.status).toBeCalledWith(204);
 
 	});
-	it("Should be return status code 400 with throw error" , async () => {
+	it("Should be throw error an error with status code 500" , async () => {
+		jest.spyOn(Validator, "isValid").mockImplementation(() => {
+			return {
+				error: false,
+				message: null    
+			};
+		});
 		const request = getMockReq({
 			params: {
 				id: "123"
@@ -45,20 +75,11 @@ describe("testing Update User Controller", () => {
 		});
 		const {res : response} = getMockRes();
 
-		const updateUserUseCase = new UpdateUserUseCase({
-			create: async () => {},
-			findAll: async () => {return {...[]}; },
-			createMany: async () => {throw new Error("error");},
-			destroy: async () => {},
-			destroyMany: async () => {},
-			update: async () => {},
-			findByEmail: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};},
-			findUser: async () => {return {id: "123",username: "test", email: "123@gmail.com", password: "1234122"};}
-		});
-		updateUserUseCase.execute = async () => {throw new Error("");};
+		const updateUserUseCase = new UpdateUserUseCase(UserRepositoryMock());
+		jest.spyOn(updateUserUseCase, "execute").mockImplementation(async () => {throw new Error("Database error");});
 		const updateUserController = new UpdateUserController(updateUserUseCase);
 		await updateUserController.handle(request,response);
-		expect(response.status).toBeCalledWith(400);
+		expect(response.status).toBeCalledWith(500);
 
 	});
 });
